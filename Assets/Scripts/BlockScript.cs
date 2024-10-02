@@ -7,7 +7,8 @@ using UnityEngine.UI;
 public class BlockScript : MonoBehaviour
 {
     public GameObject textObject;
-    TMP_Text textComponent;
+    private TMP_Text textComponent;
+    private PlayerScript playerScript;
 
     public int hitsToDestroy;
     public int points;
@@ -18,6 +19,7 @@ public class BlockScript : MonoBehaviour
             textComponent = textObject.GetComponent<TMP_Text>();
             textComponent.text = hitsToDestroy.ToString();
         }
+        playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerScript>();
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -25,7 +27,11 @@ public class BlockScript : MonoBehaviour
         {
             hitsToDestroy--;
             if (hitsToDestroy == 0)
+            {
                 Destroy(gameObject);
+                playerScript.BlockDestroyed(points);
+            }
+                
             else if (textComponent != null)
                 textComponent.text = hitsToDestroy.ToString();
         }
