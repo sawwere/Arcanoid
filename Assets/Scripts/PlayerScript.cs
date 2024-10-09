@@ -9,13 +9,23 @@ public class PlayerScript : MonoBehaviour
     [Range(1, maxLevel)]
     public int level = 1;
     public float ballVelocityMult = 0.02f;
-    public GameObject bluePrefab;
-    public GameObject redPrefab;
-    public GameObject greenPrefab;
-    public GameObject yellowPrefab;
-    public GameObject ballPrefab;
+
+    [SerializeField]
+    private GameObject bluePrefab;
+    [SerializeField]
+    private GameObject redPrefab;
+    [SerializeField]
+    private GameObject greenPrefab;
+    [SerializeField]
+    private GameObject yellowPrefab;
+    [SerializeField]
+    private GameObject ballPrefab;
+    [SerializeField]
+    private AudioClip pointSound;
 
     public GameDataScript gameData;
+    AudioSource audioSrc;
+    
 
     static Collider2D[] colliders = new Collider2D[50];
     static ContactFilter2D contactFilter = new ContactFilter2D();
@@ -75,6 +85,7 @@ public class PlayerScript : MonoBehaviour
 
     void Start()
     {
+        audioSrc = Camera.main.GetComponent<AudioSource>();
         Cursor.visible = false;
         if (!gameStarted)
 {
@@ -83,6 +94,7 @@ public class PlayerScript : MonoBehaviour
                 gameData.Reset();
         }
         level = gameData.level;
+        SetMusic();
         StartLevel();
     }
 
@@ -92,6 +104,13 @@ public class PlayerScript : MonoBehaviour
         var pos = transform.position;
         pos.x = mousePos.x;
         transform.position = pos;
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            gameData.music = !gameData.music;
+            SetMusic();
+        }
+        if (Input.GetKeyDown(KeyCode.S))
+            gameData.sound = !gameData.sound;
     }
 
     void OnGUI()
@@ -110,12 +129,17 @@ public class PlayerScript : MonoBehaviour
         {
             if (level < maxLevel)
                 gameData.level++;
-            SceneManager.LoadScene("MainScene");
+            SceneManager.LoadScene("SampleScene");
         }
     }
     public void BlockDestroyed(int points)
     {
         gameData.points += points;
+        if (gameData.sound)
+        {
+            audioSrc.PlayOneShot(pointSound, 5);
+        }
+        
         StartCoroutine(BlockDestroyedCoroutine());
     }
 
@@ -128,7 +152,7 @@ public class PlayerScript : MonoBehaviour
             else
             {
                 gameData.Reset();
-                SceneManager.LoadScene("MainScene");
+                SceneManager.LoadScene("SampleScene");
             }
     }
 
@@ -136,5 +160,13 @@ public class PlayerScript : MonoBehaviour
     {
         gameData.balls--;
         StartCoroutine(BallDestroyedCoroutine());
+    }
+
+    void SetMusic()
+    {
+        if (gameData.music)
+            audioSrc.Play();
+        else
+            audioSrc.Stop();
     }
 }

@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Blue Block Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 4014605892051889127, guid: e6ccf61ff65a1a346a9eb16557bd1e3c, type: 3}
+      propertyPath: m_TagString
+      value: Wall
+      objectReference: {fileID: 0}
     - target: {fileID: 5639138360380082698, guid: e6ccf61ff65a1a346a9eb16557bd1e3c, type: 3}
       propertyPath: m_Sprite
       value: 

@@ -10,6 +10,9 @@ public class GameDataScript : ScriptableObject
     public int balls = 6;
     public int points = 0;
 
+    public bool music = true;
+    public bool sound = true;
+
     public void Reset()
     {
         level = 1;

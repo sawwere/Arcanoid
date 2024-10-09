@@ -430,11 +430,11 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 0589256fe9c276847bea11729dc9fdb5, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.2
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -1150,6 +1150,8 @@ MonoBehaviour:
   greenPrefab: {fileID: 4634865415946405178, guid: e2b6aa2e739c3f649ba12288683fcb9c, type: 3}
   yellowPrefab: {fileID: 4446912094843183876, guid: db12b478d4c057a4bb24afa51984ffd6, type: 3}
   ballPrefab: {fileID: 6623300093219333068, guid: e249d0a9cbf9b77409b3c1c39e5852f6, type: 3}
+  pointSound: {fileID: 8300000, guid: b127c1c5f553c564aa66a087082cd431, type: 3}
+  gameData: {fileID: 11400000, guid: 670de5b3e527c9249b88fa122c764a11, type: 2}
 --- !u!50 &1841481733
 Rigidbody2D:
   serializedVersion: 4

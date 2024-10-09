@@ -164,3 +164,4 @@ MonoBehaviour:
   ballInitialForce: {x: 100, y: 300}
   hitSound: {fileID: 8300000, guid: 0cd50a8db6f3dbe4191c63c770dc484e, type: 3}
   loseSound: {fileID: 8300000, guid: 119b27e40f27d5241b4d2c42aba035f0, type: 3}
+  gameData: {fileID: 11400000, guid: 670de5b3e527c9249b88fa122c764a11, type: 2}
