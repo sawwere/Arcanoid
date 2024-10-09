@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerScript : MonoBehaviour
 {
@@ -14,8 +15,11 @@ public class PlayerScript : MonoBehaviour
     public GameObject yellowPrefab;
     public GameObject ballPrefab;
 
+    public GameDataScript gameData;
+
     static Collider2D[] colliders = new Collider2D[50];
     static ContactFilter2D contactFilter = new ContactFilter2D();
+    static bool gameStarted = false;
 
     void CreateBlocks(GameObject prefab, 
         float xMax, float yMax, 
@@ -40,6 +44,8 @@ public class PlayerScript : MonoBehaviour
     void CreateBalls()
     {
         int count = 2;
+        if (gameData.balls == 1)
+            count = 1;
         for (int i = 0; i < count; i++)
         {
             var obj = Instantiate(ballPrefab);
@@ -70,6 +76,13 @@ public class PlayerScript : MonoBehaviour
     void Start()
     {
         Cursor.visible = false;
+        if (!gameStarted)
+{
+            gameStarted = true;
+            if (gameData.resetOnStart)
+                gameData.Reset();
+        }
+        level = gameData.level;
         StartLevel();
     }
 
@@ -81,14 +94,20 @@ public class PlayerScript : MonoBehaviour
         transform.position = pos;
     }
 
+
     IEnumerator BlockDestroyedCoroutine()
     {
         yield return new WaitForSeconds(0.1f);
         if (GameObject.FindGameObjectsWithTag("Block").Length == 0)
-            print("Level complete!");
+        {
+            if (level < maxLevel)
+                gameData.level++;
+            SceneManager.LoadScene("MainScene");
+        }
     }
     public void BlockDestroyed(int points)
     {
+        gameData.points += points;
         StartCoroutine(BlockDestroyedCoroutine());
     }
 
@@ -96,11 +115,18 @@ public class PlayerScript : MonoBehaviour
     {
         yield return new WaitForSeconds(0.1f);
         if (GameObject.FindGameObjectsWithTag("Ball").Length == 0)
-            CreateBalls();
+            if (gameData.balls > 0)
+                CreateBalls();
+            else
+            {
+                gameData.Reset();
+                SceneManager.LoadScene("MainScene");
+            }
     }
 
     public void BallDestroyed()
     {
+        gameData.balls--;
         StartCoroutine(BallDestroyedCoroutine());
     }
 }
