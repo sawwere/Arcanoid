@@ -26,6 +26,7 @@ public class BallScript : MonoBehaviour
     void Update()
     {
         if (rb.isKinematic)
+        {
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
                 Debug.Log("fire");
@@ -38,6 +39,16 @@ public class BallScript : MonoBehaviour
                 pos.x = playerObj.transform.position.x + deltaX;
                 transform.position = pos;
             }
+        }
+        if (!rb.isKinematic && Input.GetKeyDown(KeyCode.J))
+        {
+            var v = rb.velocity;
+            if (Random.Range(0, 2) == 0)
+                v.Set(v.x - 0.1f, v.y + 0.1f);
+            else
+                v.Set(v.x + 0.1f, v.y - 0.1f);
+            rb.velocity = v;
+        }
     }
 
     void OnTriggerEnter2D(Collider2D other)

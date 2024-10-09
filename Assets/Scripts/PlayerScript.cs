@@ -31,6 +31,11 @@ public class PlayerScript : MonoBehaviour
     static ContactFilter2D contactFilter = new ContactFilter2D();
     static bool gameStarted = false;
 
+    int requiredPointsToBall
+    {
+        get { return 400 + (level - 1) * 20; }
+    }
+
     void CreateBlocks(GameObject prefab, 
         float xMax, float yMax, 
         int count, int maxCount)
@@ -91,7 +96,7 @@ public class PlayerScript : MonoBehaviour
 {
             gameStarted = true;
             if (gameData.resetOnStart)
-                gameData.Reset();
+                gameData.Load();
         }
         level = gameData.level;
         SetMusic();
@@ -100,17 +105,39 @@ public class PlayerScript : MonoBehaviour
 
     void Update()
     {
-        var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        var pos = transform.position;
-        pos.x = mousePos.x;
-        transform.position = pos;
-        if (Input.GetKeyDown(KeyCode.M))
+        if (Time.timeScale > 0)
         {
-            gameData.music = !gameData.music;
-            SetMusic();
+            var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            var pos = transform.position;
+            pos.x = mousePos.x;
+            transform.position = pos;
+            if (Input.GetKeyDown(KeyCode.M))
+            {
+                gameData.music = !gameData.music;
+                SetMusic();
+            }
+            if (Input.GetKeyDown(KeyCode.S))
+                gameData.sound = !gameData.sound;
+            if (Input.GetButtonDown("Pause"))
+            {
+                if (Time.timeScale > 0)
+                    Time.timeScale = 0;
+                else
+                    Time.timeScale = 1;
+            }
         }
-        if (Input.GetKeyDown(KeyCode.S))
-            gameData.sound = !gameData.sound;
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            gameData.Reset();
+            SceneManager.LoadScene("MainScene");
+        }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#endif
+        }
     }
 
     void OnGUI()
@@ -120,6 +147,19 @@ public class PlayerScript : MonoBehaviour
         "<color=yellow><size=30>Level <b>{0}</b> Balls <b>{1}</b>" +
         " Score <b>{2}</b></size></color>",
         gameData.level, gameData.balls, gameData.points));
+        GUIStyle style = new GUIStyle();
+        style.alignment = TextAnchor.UpperRight;
+        GUI.Label(new Rect(5, 14, Screen.width - 10, 100),
+        string.Format(
+            "<color=yellow><size=20><color=white>Space</color>-pause {0}" +
+            " <color=white>N</color>-new" +
+            " <color=white>J</color>-jump" +
+            " <color=white>M</color>-music {1}" +
+            " <color=white>S</color>-sound {2}" +
+            " <color=white>Esc</color>-exit</size></color>",
+            OnOff(Time.timeScale > 0), OnOff(!gameData.music),
+            OnOff(!gameData.sound)), style
+         );
     }
 
     IEnumerator BlockDestroyedCoroutine()
@@ -139,7 +179,14 @@ public class PlayerScript : MonoBehaviour
         {
             audioSrc.PlayOneShot(pointSound, 5);
         }
-        
+        gameData.pointsToBall += points;
+        if (gameData.pointsToBall >= requiredPointsToBall)
+        {
+            gameData.balls++;
+            gameData.pointsToBall -= requiredPointsToBall;
+            if (gameData.sound)
+                StartCoroutine(BlockDestroyedCoroutine2());
+        }
         StartCoroutine(BlockDestroyedCoroutine());
     }
 
@@ -156,10 +203,24 @@ public class PlayerScript : MonoBehaviour
             }
     }
 
+    IEnumerator BlockDestroyedCoroutine2()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            yield return new WaitForSeconds(0.2f);
+            audioSrc.PlayOneShot(pointSound, 5);
+        }
+    }
+
     public void BallDestroyed()
     {
         gameData.balls--;
         StartCoroutine(BallDestroyedCoroutine());
+    }
+
+    string OnOff(bool boolVal)
+    {
+        return boolVal ? "on" : "off";
     }
 
     void SetMusic()
@@ -169,4 +230,11 @@ public class PlayerScript : MonoBehaviour
         else
             audioSrc.Stop();
     }
+
+    void OnApplicationQuit()
+    {
+        gameData.Save();
+    }
+
+
 }
