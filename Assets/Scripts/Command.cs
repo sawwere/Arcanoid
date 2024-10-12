@@ -27,7 +27,6 @@ public static class Commands
         public void Execute()
         {
             AudioManager manager = AudioManager.Instance;
-            Debug.Log("MuteMusicCommand");
             manager.MuteMusic();
         }
     }
@@ -37,7 +36,6 @@ public static class Commands
         public void Execute()
         {
             AudioManager manager = AudioManager.Instance;
-            Debug.Log("MuteSoundEfectsCommand");
             manager.MuteSoundEffect();
         }
     }

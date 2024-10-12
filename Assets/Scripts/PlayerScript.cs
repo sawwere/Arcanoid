@@ -97,9 +97,9 @@ public class PlayerScript : MonoBehaviour
         if (!gameStarted)
 {
             gameStarted = true;
-            if (gameData.resetOnStart) 
-                gameData.Load();
-            audioManager.ReStart();
+            //if (gameData.resetOnStart) 
+            //    gameData.Load();
+            //audioManager.ReStart();
         }
         level = gameData.level;
         StartLevel();
@@ -179,8 +179,15 @@ public class PlayerScript : MonoBehaviour
         if (GameObject.FindGameObjectsWithTag("Block").Length == 0)
         {
             if (level < maxLevel)
+            {
                 gameData.level++;
-            SceneManager.LoadScene("SampleScene");
+                SceneManager.LoadScene("MainScene");
+            }
+            else
+            {
+                SceneManager.LoadScene("Menu");
+            }
+            
         }
     }
     public void BlockDestroyed(int points)
@@ -207,7 +214,7 @@ public class PlayerScript : MonoBehaviour
             else
             {
                 gameData.Reset();
-                SceneManager.LoadScene("SampleScene");
+                SceneManager.LoadScene("MainScene");
             }
     }
 
@@ -233,9 +240,6 @@ public class PlayerScript : MonoBehaviour
 
     void OnApplicationQuit()
     {
-        Debug.Log(gameData.music);
         gameData.Save();
     }
-
-
 }
