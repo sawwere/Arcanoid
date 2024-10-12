@@ -8,8 +8,8 @@ public class BallScript : MonoBehaviour
     Rigidbody2D rb;
     GameObject playerObj;
     AudioSource audioSrc;
-    public AudioClip hitSound;
-    public AudioClip loseSound;
+    //public AudioClip hitSound;
+    //public AudioClip loseSound;
 
     public GameDataScript gameData;
 
@@ -20,7 +20,6 @@ public class BallScript : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         playerObj = GameObject.FindGameObjectWithTag("Player");
-        audioSrc = Camera.main.GetComponent<AudioSource>();
         deltaX = transform.position.x;
     }
     void Update()
@@ -29,7 +28,6 @@ public class BallScript : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
-                Debug.Log("fire");
                 rb.isKinematic = false;
                 rb.AddForce(ballInitialForce);
             }
@@ -55,7 +53,7 @@ public class BallScript : MonoBehaviour
     {
         if (gameData.sound)
         {
-            audioSrc.PlayOneShot(loseSound, 5);
+            //audioSrc.PlayOneShot(loseSound, gameData.soundVolume);
         }
         Destroy(gameObject);
         playerObj.GetComponent<PlayerScript>().BallDestroyed();
@@ -65,7 +63,7 @@ public class BallScript : MonoBehaviour
     {
         if (gameData.sound)
         {
-            audioSrc.PlayOneShot(hitSound, 5);
+            //audioSrc.PlayOneShot(hitSound, gameData.soundVolume);
         }
     }
 }

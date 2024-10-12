@@ -22,9 +22,11 @@ public class PlayerScript : MonoBehaviour
     private GameObject ballPrefab;
     [SerializeField]
     private AudioClip pointSound;
+    [SerializeField]
+    private GameObject pauseMenu;
 
     public GameDataScript gameData;
-    AudioSource audioSrc;
+    AudioManager audioManager;
     
 
     static Collider2D[] colliders = new Collider2D[50];
@@ -90,16 +92,16 @@ public class PlayerScript : MonoBehaviour
 
     void Start()
     {
-        audioSrc = Camera.main.GetComponent<AudioSource>();
+        audioManager =  AudioManager.Instance;
         Cursor.visible = false;
         if (!gameStarted)
 {
             gameStarted = true;
-            if (gameData.resetOnStart)
+            if (gameData.resetOnStart) 
                 gameData.Load();
+            audioManager.ReStart();
         }
         level = gameData.level;
-        SetMusic();
         StartLevel();
     }
 
@@ -111,32 +113,41 @@ public class PlayerScript : MonoBehaviour
             var pos = transform.position;
             pos.x = mousePos.x;
             transform.position = pos;
-            if (Input.GetKeyDown(KeyCode.M))
+        }
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            Commands.GetMuteMusicCommand().Execute();
+        }
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            Commands.GetMuteSoundEfectsCommand().Execute();
+        }
+            
+        if (Input.GetButtonDown("Pause"))
+        {
+            if (Time.timeScale > 0)
             {
-                gameData.music = !gameData.music;
-                SetMusic();
+                pauseMenu.SetActive(true);
+                Cursor.visible = true;
+                Time.timeScale = 0;
             }
-            if (Input.GetKeyDown(KeyCode.S))
-                gameData.sound = !gameData.sound;
-            if (Input.GetButtonDown("Pause"))
+            else
             {
-                if (Time.timeScale > 0)
-                    Time.timeScale = 0;
-                else
-                    Time.timeScale = 1;
+                pauseMenu.SetActive(false);
+                Cursor.visible = false;
+                Time.timeScale = 1;
             }
+                    
         }
         if (Input.GetKeyDown(KeyCode.R))
         {
+            gameStarted = false;
             gameData.Reset();
             SceneManager.LoadScene("MainScene");
         }
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            Application.Quit();
-#if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-#endif
+            Commands.GetExitCommand().Execute();
         }
     }
 
@@ -175,10 +186,7 @@ public class PlayerScript : MonoBehaviour
     public void BlockDestroyed(int points)
     {
         gameData.points += points;
-        if (gameData.sound)
-        {
-            audioSrc.PlayOneShot(pointSound, 5);
-        }
+        audioManager.Play("point");
         gameData.pointsToBall += points;
         if (gameData.pointsToBall >= requiredPointsToBall)
         {
@@ -208,7 +216,7 @@ public class PlayerScript : MonoBehaviour
         for (int i = 0; i < 10; i++)
         {
             yield return new WaitForSeconds(0.2f);
-            audioSrc.PlayOneShot(pointSound, 5);
+            audioManager.Play("point");
         }
     }
 
@@ -223,16 +231,9 @@ public class PlayerScript : MonoBehaviour
         return boolVal ? "on" : "off";
     }
 
-    void SetMusic()
-    {
-        if (gameData.music)
-            audioSrc.Play();
-        else
-            audioSrc.Stop();
-    }
-
     void OnApplicationQuit()
     {
+        Debug.Log(gameData.music);
         gameData.Save();
     }
 
