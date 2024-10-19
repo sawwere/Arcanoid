@@ -49,20 +49,20 @@ public class BonusBase : MonoBehaviour
 				textComponent.text = text;
 				textComponent.color = colors[5];
 				break;
-			case "+100":
-				gameObject.GetComponent<SpriteRenderer>().color = colors[0];
-				textComponent.text = text;
-				textComponent.color = colors[5];
+			case "Slow":
+
 				break;
-			case "+100":
-				gameObject.GetComponent<SpriteRenderer>().color = colors[0];
-				textComponent.text = text;
-				textComponent.color = colors[5];
+			case "Fast":
+
 				break;
-			case "+100":
-				gameObject.GetComponent<SpriteRenderer>().color = colors[0];
-				textComponent.text = text;
-				textComponent.color = colors[5];
+			case "Ball":
+
+				break;
+			case "+2":
+
+				break;
+			case "+10":
+
 				break;
 		}
 	}
