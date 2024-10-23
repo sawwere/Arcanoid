@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -26,10 +27,11 @@ public class PlayerScript : MonoBehaviour
     private AudioClip pointSound;
     [SerializeField]
     private GameObject pauseMenu;
+    public GameObject bonusPrefab;
 
     public GameDataScript gameData;
     AudioManager audioManager;
-    
+
 
     static Collider2D[] colliders = new Collider2D[50];
     static ContactFilter2D contactFilter = new ContactFilter2D();
@@ -73,6 +75,65 @@ public class PlayerScript : MonoBehaviour
             ball.ballInitialForce *= 1 + level * ballVelocityMult;
         }
     }
+
+    public void SpawnBonus(Vector3 position)
+    {
+        var bonus = Instantiate(bonusPrefab, position, Quaternion.identity);
+        bonus.AddComponent(BonusFactory.getBonusScript());
+    }
+
+
+    public void AddPoints(int pointsNumber)
+    {
+        gameData.points += pointsNumber;
+        gameData.pointsToBall += pointsNumber;
+        if (gameData.pointsToBall >= requiredPointsToBall)
+        {
+            addBallsToReserve(1);
+            gameData.pointsToBall -= requiredPointsToBall;
+            
+        }
+    }
+
+    public void addBallsToReserve(int number)
+    {
+        gameData.balls += number;
+        Debug.Log(gameData.balls);
+    }
+
+    public void addBallsToGame(int number)
+    {
+        var ball = GameObject.FindGameObjectsWithTag("Ball")[0];
+        var ballRb = ball.GetComponent<Rigidbody2D>();
+        if (ballRb.isKinematic)
+        {
+            return;
+        }
+
+        addBallsToReserve(number);
+        for (int i = 0; i < number; i++)
+        {
+            var newBall = Instantiate(ballPrefab, ball.transform.position, Quaternion.identity);
+            var newBallRb = newBall.GetComponent<Rigidbody2D>();
+            newBallRb.isKinematic = false;
+            newBallRb.velocity = Quaternion.AngleAxis(Random.Range(1, 359), Vector3.forward) * ballRb.velocity;
+        }
+    }
+
+
+    public void changeBallsVelocity(float shift)
+    {
+        var balls = GameObject.FindGameObjectsWithTag("Ball");
+        foreach (var ball in balls)
+        {
+            var rigidbody2D = ball.GetComponent<Rigidbody2D>();
+            var velocity = rigidbody2D.velocity;
+            velocity.Set(velocity.x * (1 + shift), velocity.y * (1 + shift));
+            rigidbody2D.velocity = velocity;
+        }
+    }
+
+
     void StartLevel()
     {
         SetBackground();
@@ -245,4 +306,14 @@ public class PlayerScript : MonoBehaviour
     {
         gameData.Save();
     }
+
+
+}
+
+
+public interface IBallController
+{
+    void SetSpeedMultiplier(float multiplier);
+    void UpdateReserve(int value);
+    void UpdateReserveImmediately(int value);
 }
