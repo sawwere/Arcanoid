@@ -420,6 +420,7 @@ GameObject:
   - component: {fileID: 232401123}
   - component: {fileID: 232401125}
   - component: {fileID: 232401124}
+  - component: {fileID: 232401126}
   m_Layer: 6
   m_Name: RightWall
   m_TagString: Wall
@@ -539,6 +540,33 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!50 &232401126
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 232401122}
+  m_BodyType: 2
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &270443998
 GameObject:
   m_ObjectHideFlags: 0
@@ -3743,6 +3771,7 @@ MonoBehaviour:
   redPrefab: {fileID: 4014605892051889127, guid: e6ccf61ff65a1a346a9eb16557bd1e3c, type: 3}
   greenPrefab: {fileID: 4634865415946405178, guid: e2b6aa2e739c3f649ba12288683fcb9c, type: 3}
   yellowPrefab: {fileID: 4446912094843183876, guid: db12b478d4c057a4bb24afa51984ffd6, type: 3}
+  movingPrefab: {fileID: 2284140013416686014, guid: 190eecba5c8db504ba4bac1ecd0835b3, type: 3}
   ballPrefab: {fileID: 6623300093219333068, guid: e249d0a9cbf9b77409b3c1c39e5852f6, type: 3}
   pointSound: {fileID: 8300000, guid: b127c1c5f553c564aa66a087082cd431, type: 3}
   pauseMenu: {fileID: 761033231}

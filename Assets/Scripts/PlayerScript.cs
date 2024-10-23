@@ -19,6 +19,8 @@ public class PlayerScript : MonoBehaviour
     [SerializeField]
     private GameObject yellowPrefab;
     [SerializeField]
+    private GameObject movingPrefab;
+    [SerializeField]
     private GameObject ballPrefab;
     [SerializeField]
     private AudioClip pointSound;
@@ -80,6 +82,7 @@ public class PlayerScript : MonoBehaviour
         CreateBlocks(redPrefab, xMax, yMax, 1 + level, 10);
         CreateBlocks(greenPrefab, xMax, yMax, 1 + level, 12);
         CreateBlocks(yellowPrefab, xMax, yMax, 2 + level, 15);
+        CreateBlocks(movingPrefab, xMax, yMax, level, 10);
         CreateBalls();
     }
 
