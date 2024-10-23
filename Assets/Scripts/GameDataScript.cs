@@ -17,6 +17,7 @@ public class GameDataScript : ScriptableObject
     public float musicVolume = 1.0f;
     public float soundVolume = 1.0f;
 
+
     public void Reset()
     {
         level = 1;
@@ -48,4 +49,9 @@ public class GameDataScript : ScriptableObject
         musicVolume = PlayerPrefs.GetFloat("musicVolume");
         soundVolume = PlayerPrefs.GetFloat("soundVolume");
     }
+
+   
+
+   
+
 }
