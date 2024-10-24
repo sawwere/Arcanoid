@@ -14,6 +14,7 @@ public class MovingBlockScript : MonoBehaviour
     public GameDataScript gameData;
     public int hitsToDestroy;
     public int points;
+    public bool isBonusBlock;
 
     Rigidbody2D rb;
     public Vector2 velocity;
@@ -79,21 +80,26 @@ public class MovingBlockScript : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Ball"))
         {
             hitsToDestroy--;
             if (hitsToDestroy == 0)
             {
+                if (isBonusBlock)
+                {
+                    playerScript.SpawnBonus(transform.position);
+                }
                 Destroy(gameObject);
                 playerScript.BlockDestroyed(points);
 
-                if (gameObject.name == "Green Block Variant(Clone)")
-                {
-                    bonus = Instantiate(BonusObject, gameObject.transform.position, gameObject.transform.rotation);
-                    bonus.AddComponent<BonusBase>();
-                    bonus.GetComponent<BonusBase>().build(gameData, "+100");
-                }
+                //if (gameObject.name== "Green Block Variant(Clone)")
+                //{
+                //bonus = Instantiate(BonusObject, gameObject.transform.position, gameObject.transform.rotation);
+                //bonus.AddComponent<BonusBase>();
+                //bonus.GetComponent<BonusBase>().build(gameData, "+100");
+                //}
+
             }
+
             else if (textComponent != null)
                 textComponent.text = hitsToDestroy.ToString();
         }
